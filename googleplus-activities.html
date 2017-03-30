@@ -31,7 +31,7 @@
       // The provided key works for this sample only when run from
       // https://google-api-javascript-client.googlecode.com/hg/samples/authSample.html
       // To use in your own application, replace this API key with your own.
-      var apiKey = '';
+      var apiKey = 'AIzaSyCKqoolDxDuN71WLMM1Br2Z5cSQyuMPEoQ';
 
       // Use a button to handle authentication the first time.
       function handleClientLoad() {
@@ -43,7 +43,7 @@
       function makeApiCall() {
         gapi.client.load('plus', 'v1', function() {
           var request = gapi.client.plus.people.get({
-            'userId': ''
+            'userId': '108086881826934773478'
             // For instance: 
             // 'userId': '+GregorioRobles'
           });
@@ -55,6 +55,36 @@
             heading.appendChild(document.createTextNode(resp.displayName));
 
             document.getElementById('content').appendChild(heading);
+          });
+		  var activities = gapi.client.plus.activities.list({
+            'userId': '108086881826934773478',
+            'collection': 'public',
+          });
+
+			activities.execute(function(resp) {
+            for (var i = 0; i < resp.items.length; i++){
+              if(resp.items[i].location != null){
+                var heading = document.createElement('h4');
+				var li = document.createElement('li');
+				var pub = document.createElement('p');
+				var title = resp.items[i].title;
+				li.appendChild(document.createTextNode(title));
+				var published = resp.items[i].published;
+				pub.appendChild(document.createTextNode(published));
+                var activity = resp.items[i].location.displayName;
+                heading.appendChild(document.createTextNode(activity));
+                var info = document.createElement('p');
+                var latitude = resp.items[i].location.position.latitude;
+                var longitude = resp.items[i].location.position.longitude;
+                info.appendChild(document.createTextNode("Latitude: " + latitude + " - "));
+                info.appendChild(document.createTextNode("Longitude: " + longitude));
+                document.getElementById('content').appendChild(heading);
+				document.getElementById('content').appendChild(li);
+			    document.getElementById('content').appendChild(pub);
+                document.getElementById('content').appendChild(info);
+
+              }
+            }
           });
         });
       }
